@@ -1,24 +1,40 @@
 package com.solodilov.lifecycle.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.paging.PagedListAdapter;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.solodilov.lifecycle.R;
 import com.solodilov.lifecycle.model.SearchRequests;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class OldSearchAdapter extends RecyclerView.Adapter<OldSearchAdapter.ViewHolder> {
+public class OldSearchAdapter extends PagedListAdapter<SearchRequests, OldSearchAdapter.ViewHolder> {
 
-    private List<SearchRequests> list;
+    private static final DiffUtil.ItemCallback<SearchRequests> DIFF_CALLBACK = new DiffUtil.ItemCallback<SearchRequests>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull SearchRequests oldItem, @NonNull SearchRequests newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull SearchRequests oldItem, @NonNull SearchRequests newItem) {
+            return oldItem.equals(newItem);
+        }
+    };
+
+
+    public OldSearchAdapter() {
+        super(DIFF_CALLBACK);
+    }
 
     @NonNull
     @Override
@@ -29,16 +45,12 @@ public class OldSearchAdapter extends RecyclerView.Adapter<OldSearchAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(list.get(position));
-    }
-
-    @Override
-    public int getItemCount() {
-        return list != null ? list.size() : 0;
-    }
-
-    public void setListItems(List<SearchRequests> listSearch) {
-        this.list = listSearch;
+        SearchRequests requests = getItem(position);
+        if (requests != null) {
+            holder.bind(getItem(position));
+        }else {
+            holder.clear();
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -69,6 +81,10 @@ public class OldSearchAdapter extends RecyclerView.Adapter<OldSearchAdapter.View
             mTvId.setText(String.valueOf(searchRequests.getId()));
             mTvAuthor.setText(searchRequests.getQuoteAuthor());
             mTvLink.setText(searchRequests.getSenderLink());
+        }
+
+        public void clear() {
+            Log.d(this.getClass().getSimpleName(), "CLEAR");
         }
     }
 }

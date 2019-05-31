@@ -12,7 +12,6 @@ import butterknife.Unbinder;
 
 public abstract class BaseFragment extends Fragment implements BaseView{
     private Unbinder unbinder;
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

@@ -1,6 +1,7 @@
 package com.solodilov.lifecycle.ui.view;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,20 +13,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.solodilov.lifecycle.R;
-import com.solodilov.lifecycle.bases.BaseFragment;
 import com.solodilov.lifecycle.adapters.OldSearchAdapter;
-import com.solodilov.lifecycle.model.SearchRequests;
+import com.solodilov.lifecycle.bases.BaseFragment;
 import com.solodilov.lifecycle.ui.view_model.MainViewModel;
 
 import butterknife.BindView;
 
 public class MainFragment extends BaseFragment {
-    private MainViewModel viewModel;
 
     @BindView(R.id.rv_old_search_request)
     protected RecyclerView mOldSearchRv;
 
-    private OldSearchAdapter mOldSearchAdapter;
+    private MainViewModel viewModel;
+    private OldSearchAdapter mOldSearchAdapter = new OldSearchAdapter();
 
 
     @Override
@@ -46,15 +46,16 @@ public class MainFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initRV();
-        viewModel.getOldList().observe(this, listSearch -> {
-            mOldSearchAdapter.setListItems(listSearch);
-            mOldSearchAdapter.notifyDataSetChanged();
-        });
     }
 
     private void initRV() {
         mOldSearchRv.setLayoutManager(new LinearLayoutManager(getContext()));
-        mOldSearchAdapter = new OldSearchAdapter();
         mOldSearchRv.setAdapter(mOldSearchAdapter);
+        viewModel.subscribeToData().observe(this, listSearch -> {
+            Parcelable recyclerViewState = mOldSearchRv.getLayoutManager().onSaveInstanceState();
+            mOldSearchAdapter.submitList(listSearch);
+            mOldSearchRv.postDelayed(() -> mOldSearchRv.getLayoutManager().onRestoreInstanceState(recyclerViewState),200);
+        });
     }
 }
+

@@ -1,5 +1,7 @@
 package com.solodilov.lifecycle.api;
 
+import androidx.lifecycle.LiveData;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.solodilov.lifecycle.Const;
@@ -7,6 +9,7 @@ import com.solodilov.lifecycle.LifeCycleApplication;
 import com.solodilov.lifecycle.model.SearchRequests;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Single;
@@ -52,5 +55,9 @@ public class ApiManager {
         body.put("lang", "ru");
 
         return service.getForesmatic(body);
+    }
+
+    public List<SearchRequests> getListPagin(int requestedStartPosition, int pageSize) {
+        return null;
     }
 }

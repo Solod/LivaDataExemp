@@ -1,18 +1,19 @@
 package com.solodilov.lifecycle.ui.repository;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+import androidx.paging.DataSource;
 
 import com.solodilov.lifecycle.model.SearchRequests;
 
-import java.util.List;
+import io.reactivex.Single;
+
 
 public interface MainRepository {
-    LiveData<List<SearchRequests>> getAllRequest();
 
-    void requestForesmatic(MutableLiveData<SearchRequests> mForesmatic);
+    Single<SearchRequests> requestForesmatic();
 
     void setNewForesmatic(LiveData<SearchRequests> mForesmatic);
 
-    SearchRequests getSearchItem(long id);
+
+    DataSource.Factory<Integer, SearchRequests> getPagedSearchRequest();
 }

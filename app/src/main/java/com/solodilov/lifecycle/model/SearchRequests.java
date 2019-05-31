@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity(tableName = "foresmatic")
 public class SearchRequests implements Serializable {
@@ -56,5 +57,21 @@ public class SearchRequests implements Serializable {
 
     public void setSenderLink(String senderLink) {
         this.senderLink = senderLink;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SearchRequests that = (SearchRequests) o;
+        return id == that.id &&
+                Objects.equals(quoteText, that.quoteText) &&
+                Objects.equals(quoteAuthor, that.quoteAuthor) &&
+                Objects.equals(senderLink, that.senderLink);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, quoteText, quoteAuthor, senderLink);
     }
 }
